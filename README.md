@@ -63,10 +63,24 @@ Many other applications will use consume this API.
 We are planning to put this project in production. According to you, what are the missing pieces to make this project production ready?
 Please elaborate an action plan.
 
+Mettre en place un pipeline CI/CD pour éviter tout régression lors d'une mise en prod
+Mettre en place une authentification + quota d'usage + un cache
+Héberger cette api chez un Cloud Provider
+Mettre en place l'auto-scalling pour gérer la charge
+
+
 #### Question 2:
 Let's pretend our data team is now delivering new files every day into the S3 bucket, and our service needs to ingest those files
 every day through the populate API. Could you describe a suitable solution to automate this? Feel free to propose architectural changes.
 
+Pour automatiser l'ingestion régulière de la donnée sur notre base provenant de fichiers déposés sur un S3, on pourrait en restant sur le cloud AWS utiliser le service Lambda, qui prendrait en input l'event d'ajout de fichier sur le S3 pour trigger une lambda, qui elle même viendrait appeler le endpoint de notre API pour peupler la base à partir d'un fichier json.
+
+Une autre solution serait de faire un ETL avec Airflow.
+
 #### Question 3:
 Both the current database schema and the files dropped in the S3 bucket are not optimal.
 Can you find ways to improve them?
+
+Les fichiers JSON sont des tableaux de tableaux ce qui oblige à itérer en cascade et peut donc prendre du temps à lire. Je générerais le top 100 des apps dans un seul array par fichier JSON.
+
+Le schéma de base actuel répond plutôt bien aux contraintes du projet afficher/lister/modifier/supprimer un jeu. Je ne vois pas d'évolutions qui amélioreraient le projet.
